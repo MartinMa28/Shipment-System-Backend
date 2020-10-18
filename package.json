@@ -1,5 +1,5 @@
 {
-  "name": "Shipment-System-Backend",
+  "name": "shipment-system-backend",
   "version": "1.0.0",
   "description": "The back-end server of a shipment tracking system",
   "main": "index.js",
