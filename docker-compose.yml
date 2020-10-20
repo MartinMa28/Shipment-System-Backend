@@ -13,3 +13,8 @@ services:
       - rabbit
   rabbit:
     image: rabbitmq:3.8.9
+  airflow:
+    image: puckel/docker-airflow:latest
+    command: webserver
+    ports:
+      - '8080:8080'
