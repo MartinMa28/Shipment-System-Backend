@@ -6,13 +6,13 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
   try {
-    const client = await MongoClient.connect('mongodb://localhost:27017', {
+    const client = await MongoClient.connect('mongodb://db:27017', {
       useUnifiedTopology: true,
     });
     const db = client.db('my-blog');
 
     const cursor = db.collection('articles').find({});
-    const conn = await amqp.connect('amqp://localhost');
+    const conn = await amqp.connect('amqp://rabbit');
     const ch = await conn.createChannel();
     const queue = 'shipments';
 

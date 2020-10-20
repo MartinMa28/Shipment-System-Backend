@@ -21,7 +21,7 @@ const sendRequest = async function () {
 };
 
 const run = async () => {
-  const conn = await amqp.connect('amqp://localhost');
+  const conn = await amqp.connect('amqp://rabbit');
   const ch = await conn.createChannel();
   const queue = 'shipments';
 
@@ -37,7 +37,7 @@ const run = async () => {
       const articleName = msg.content.toString();
       console.log(`[AMQP] Received ${articleName}`);
       sendRequest();
-      const client = await MongoClient.connect('mongodb://localhost:27017', {
+      const client = await MongoClient.connect('mongodb://db:27017', {
         useUnifiedTopology: true,
       });
       const db = client.db('my-blog');
