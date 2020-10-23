@@ -1,0 +1,22 @@
+version: '3'
+
+services:
+  db:
+    image: mongo:4.4.1
+    ports:
+      - '27018:27017'
+  web:
+    build: .
+    command: npm start
+    ports:
+      - '8000:8000'
+    depends_on:
+      - db
+      - rabbit
+  rabbit:
+    image: rabbitmq:3.8.9
+  airflow:
+    image: puckel/docker-airflow:latest
+    command: webserver
+    ports:
+      - '8080:8080'

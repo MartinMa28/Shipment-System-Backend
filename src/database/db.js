@@ -4,7 +4,7 @@ const ObjectID = require("mongodb").ObjectID;
 
 const connectDB = async () => {
     const myDB = {};
-    const uri = "mongodb://localhost:27017";
+    const uri = "mongodb://db:27017";
 
     myDB.getShipments = async (userID) => {
         const client = new MongoClient(uri, { useUnifiedTopology: true });
@@ -12,7 +12,7 @@ const connectDB = async () => {
         const db = client.db("tracking_database");
         const col = db.collection("shipments");
 
-        const query = { "userID": userID };
+        const query = { "user_id": userID };
         return col.find(query).sort({ _id:-1 }).toArray()
             .finally(() => client.close());
     };

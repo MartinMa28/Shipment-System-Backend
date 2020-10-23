@@ -12,13 +12,16 @@ router.get('/:id', async (req, res, next) => {
 });
 
 // create a new shipment
+// available carrier: usps, fedex, ups
 router.post('/new', async (req, res, next) => {
 	const myDB = await connectDB();
 	const newShipment = {
-		trackingNum: req.body.trackingNum,
-		comments: req.body.comments,
-		userID: req.body.userID,
-		active: true
+		user_id: req.body.user_id,
+		tracking_num: req.body.tracking_num,
+		carrier: req.body.carrier,
+		comment: req.body.comment,
+		order_url: req.body.order_url,
+		active: true,
 	};
 	const data = await myDB.addShipment(newShipment);
 	if (data.result.ok === 1) {
@@ -31,8 +34,8 @@ router.post('/new', async (req, res, next) => {
 // update an existing shipment(deactivate it)
 router.put('/:id', async (req, res) => {
 	const myDB = await connectDB();
-	const id = req.params.id;
-	const dbResult = await myDB.updateShipment(id);
+	const documentID = req.params.id;
+	const dbResult = await myDB.updateShipment(documentID);
 	if (dbResult.result.ok === 1) {
 		res.json({'success': true});
 	} else {
@@ -43,8 +46,8 @@ router.put('/:id', async (req, res) => {
 // delete a shipment
 router.delete('/:id', async (req, res) => {
 	const myDB = await connectDB();
-	const id = req.params.id;
-	const dbResult = await myDB.deleteShipment(id);
+	const documentID = req.params.id;
+	const dbResult = await myDB.deleteShipment(documentID);
 	if (dbResult.result.ok === 1) {
 		res.json({'success': true});
 	} else {
