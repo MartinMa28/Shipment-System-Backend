@@ -9,9 +9,9 @@ router.get('/', async (req, res) => {
     const client = await MongoClient.connect('mongodb://db:27017', {
       useUnifiedTopology: true,
     });
-    const db = client.db('my-blog');
+    const db = client.db('tracking');
 
-    const cursor = db.collection('articles').find({});
+    const cursor = db.collection('shipments').find({});
     const conn = await amqp.connect('amqp://rabbit');
     const ch = await conn.createChannel();
     const queue = 'shipments';
@@ -25,13 +25,13 @@ router.get('/', async (req, res) => {
       });
 
       ch.sendToQueue(queue, Buffer.from(message));
-      console.log(`[AMQP] Sent ${message} BOTTOM`);
+      console.log(`[AMQP] Sent ${message}`);
     }
 
     await ch.close();
     await conn.close();
     await client.close();
-    res.status(200).send('Published article names to consumer.');
+    res.status(200).send('Published to consumer.');
   } catch (error) {
     res.status(500).json({
       message: 'Failed to synchronize shipment states',
