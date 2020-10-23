@@ -9,15 +9,19 @@ router.get('/', async (req, res) => {
     const client = await MongoClient.connect('mongodb://db:27017', {
       useUnifiedTopology: true,
     });
-    const db = client.db('tracking');
+    const db = client.db('tracking_database');
 
-    const cursor = db.collection('shipments').find({});
+    const cursor = db.collection('shipments').find({ active: { $eq: true } });
     const conn = await amqp.connect('amqp://rabbit');
     const ch = await conn.createChannel();
     const queue = 'shipments';
 
     const messages = [];
-    await cursor.forEach((shipment) => messages.push(shipment.name));
+    await cursor.forEach((shipment) =>
+      messages.push(
+        `${shipment._id},${shipment.carrier},${shipment.tracking_num}`
+      )
+    );
 
     for (const message of messages) {
       await ch.assertQueue(queue, {
