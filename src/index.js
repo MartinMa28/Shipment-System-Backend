@@ -5,7 +5,7 @@ import shipmentRouter from './routers/shipment';
 import stateSyncRouter from './routers/state-sync-job';
 
 const app = express();
-const PORT = 8000;
+const PORT = 3001;
 
 app.use(bodyParser.json());
 
