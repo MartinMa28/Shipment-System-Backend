@@ -1,22 +1,50 @@
 import axios from 'axios';
-import { MongoClient } from 'mongodb';
+import { MongoClient, ObjectId } from 'mongodb';
 import amqp from 'amqplib';
 
-const sendRequest = async function () {
+const processShipment = async (shipmentId, carrier, trackingNum) => {
   const config = {
     method: 'get',
-    url:
-      'http://api.shipengine.com/v1/tracking?carrier_code=usps&tracking_number=9374889676091289203070',
+    url: `http://api.shipengine.com/v1/tracking?carrier_code=${carrier}&tracking_number=${trackingNum}`,
     headers: {
       'API-KEY': 'TEST_fF1MGE2gp9GFuBAKcmyKDZ9gWoYpGRAbjGKo7jpTiPk',
     },
   };
 
   try {
-    const response = await axios(config);
-    console.log(response.data);
+    const resp = await axios(config);
+    const respData = resp.data;
+    const client = await MongoClient.connect('mongodb://db:27017', {
+      useUnifiedTopology: true,
+    });
+    const db = client.db('tracking_database');
+    const shipmentRecord = await db.collection('shipments').findOne({
+      _id: ObjectId(shipmentId),
+    });
+
+    if (
+      shipmentRecord.status === respData.status_code &&
+      shipmentRecord.carrier_status_desc === respData.carrier_status_description
+    ) {
+      console.log(`No change on shipment ${shipmentId}`);
+    } else {
+      db.collection('shipments').updateOne(
+        {
+          _id: ObjectId(shipmentId),
+        },
+        {
+          $set: {
+            status: respData.status_code,
+            carrier_status_desc: respData.carrier_status_description,
+          },
+        }
+      );
+      console.log(`Updated shipment ${shipmentId}`);
+    }
   } catch (err) {
-    console.log(err);
+    console.log(
+      `Failed to update shipment ${shipmentId}: ${carrier} ${trackingNum}`
+    );
   }
 };
 
@@ -34,28 +62,14 @@ const run = async () => {
   await ch.consume(
     queue,
     async (msg) => {
-      const articleName = msg.content.toString();
-      console.log(`[AMQP] Received ${articleName}`);
-      sendRequest();
-      const client = await MongoClient.connect('mongodb://db:27017', {
-        useUnifiedTopology: true,
-      });
-      const db = client.db('my-blog');
-
-      const articleInfo = await db
-        .collection('articles')
-        .findOne({ name: articleName });
-      await db.collection('articles').updateOne(
-        { name: articleName },
-        {
-          $set: {
-            comments: articleInfo.comments.concat({
-              username: 'Yilin',
-              text: 'Comment from rabbitmq consumer.',
-            }),
-          },
-        }
+      const message = msg.content.toString();
+      const shipmentId = message.split(',')[0];
+      const carrier = message.split(',')[1];
+      const trackingNum = message.split(',')[2];
+      console.log(
+        `[AMQP] Received shipment ${shipmentId}: ${carrier} ${trackingNum}`
       );
+      processShipment(shipmentId, carrier, trackingNum);
     },
     {
       noAck: true,
