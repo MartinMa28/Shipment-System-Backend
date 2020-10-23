@@ -13,6 +13,8 @@ services:
     depends_on:
       - db
       - rabbit
+    volumes:
+      - './src:/code/src'
   rabbit:
     image: rabbitmq:3.8.9
   airflow:
