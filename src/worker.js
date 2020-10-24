@@ -1,13 +1,16 @@
 import axios from 'axios';
 import { MongoClient, ObjectId } from 'mongodb';
 import amqp from 'amqplib';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const processShipment = async (shipmentId, carrier, trackingNum) => {
   const config = {
     method: 'get',
     url: `http://api.shipengine.com/v1/tracking?carrier_code=${carrier}&tracking_number=${trackingNum}`,
     headers: {
-      'API-KEY': 'TEST_fF1MGE2gp9GFuBAKcmyKDZ9gWoYpGRAbjGKo7jpTiPk',
+      'API-KEY': `${process.env.SHIPENGINE_API_KEY}`,
     },
   };
 
@@ -42,6 +45,7 @@ const processShipment = async (shipmentId, carrier, trackingNum) => {
       console.log(`Updated shipment ${shipmentId}`);
     }
   } catch (err) {
+    console.log(err);
     console.log(
       `Failed to update shipment ${shipmentId}: ${carrier} ${trackingNum}`
     );
