@@ -1,5 +1,10 @@
 <h1>Login</h1>
-<form action="/login" method="POST" enctype="application/x-www-form-urlencoded">
+<% if (messages.error) {%> <%= messages.error %> <% } %>
+<form
+  action="/auth/login"
+  method="POST"
+  enctype="application/x-www-form-urlencoded"
+>
   <div>
     <label for="email">Email</label>
     <input type="text" id="email" name="email" />

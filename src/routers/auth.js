@@ -1,5 +1,5 @@
 import express from 'express';
-// import passport from 'passport';
+import passport from 'passport';
 
 const router = express.Router();
 
@@ -13,10 +13,13 @@ router.get('/login', (req, res) => {
   res.render('login.ejs');
 });
 
-router.post('/login', (req, res) => {
-  console.log(req.body.email);
-  console.log(req.body.password);
-  res.redirect('/');
-});
+router.post(
+  '/login',
+  passport.authenticate('local', {
+    successRedirect: '/',
+    failureRedirect: '/auth/login',
+    failureFlash: true,
+  })
+);
 
 export default router;
