@@ -1,8 +1,12 @@
 <h1>Register</h1>
-<form action="/register" method="POST">
+<form
+  action="/user/register"
+  method="POST"
+  enctype="application/x-www-form-urlencoded"
+>
   <div>
-    <label for="name">Name</label>
-    <input type="text" id="name" name="name" />
+    <label for="username">Username</label>
+    <input type="text" id="username" name="username" />
   </div>
   <div>
     <label for="email">Email</label>

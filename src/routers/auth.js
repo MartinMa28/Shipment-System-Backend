@@ -19,12 +19,4 @@ router.post('/login', (req, res) => {
   res.redirect('/');
 });
 
-router.get('/register', (req, res) => {
-  res.render('register.ejs');
-});
-
-router.get('/', (req, res) => {
-  res.render('index.ejs', { name: 'Yilin' });
-});
-
 export default router;
