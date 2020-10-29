@@ -54,4 +54,22 @@ function initialize(passport) {
   });
 }
 
+// passport middlewares
+const checkAuthenticated = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+
+  res.redirect('/auth/login');
+};
+
+const checkNotAuthenticated = (req, res, next) => {
+  if (!req.isAuthenticated()) {
+    return next();
+  }
+
+  res.redirect('/');
+};
+
 export default initialize;
+export { checkAuthenticated, checkNotAuthenticated };

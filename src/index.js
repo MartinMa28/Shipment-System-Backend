@@ -8,7 +8,7 @@ import userRouter from './routers/user';
 import shipmentRouter from './routers/shipment';
 import stateSyncRouter from './routers/state-sync-job';
 import authRouter from './routers/auth';
-import initializePassport from './passport';
+import initializePassport, { checkAuthenticated } from './passport';
 
 dotenv.config();
 
@@ -37,7 +37,7 @@ app.use('/state-sync', stateSyncRouter);
 app.use('/shipment', shipmentRouter);
 app.use('/auth', authRouter);
 
-app.get('/', (req, res) => {
+app.get('/', checkAuthenticated, (req, res) => {
   res.render('index.ejs', { name: req.user.username });
 });
 

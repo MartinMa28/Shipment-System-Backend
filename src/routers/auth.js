@@ -1,5 +1,6 @@
 import express from 'express';
 import passport from 'passport';
+import { checkNotAuthenticated } from '../passport';
 
 const router = express.Router();
 
@@ -9,7 +10,7 @@ const router = express.Router();
 //   res.redirect('/');
 // });
 
-router.get('/login', (req, res) => {
+router.get('/login', checkNotAuthenticated, (req, res) => {
   res.render('login.ejs');
 });
 
