@@ -1,9 +1,26 @@
 import express from 'express';
+import withDb from '../database/dbUtils';
+import bcrypt from 'bcrypt';
+import { checkNotAuthenticated } from '../passport';
 
 const router = express.Router();
 
-router.get('/', (req, res) => {
-  res.status(200).send('Hello user router!');
+router.get('/register', checkNotAuthenticated, (req, res) => {
+  res.render('register.ejs');
+});
+
+router.post('/register', async (req, res) => {
+  await withDb(async (db) => {
+    console.log(req.body);
+    const hashedPwd = await bcrypt.hash(req.body.password, 10);
+    console.log(hashedPwd);
+    await db.collection('users').insertOne({
+      username: req.body.username,
+      email: req.body.email,
+      password: hashedPwd,
+    });
+  });
+  res.redirect('/auth/login');
 });
 
 export default router;
