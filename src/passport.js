@@ -2,6 +2,7 @@
 import { Strategy as LocalStrategy } from 'passport-local';
 import withDb from './database/dbUtils';
 import bcrypt from 'bcrypt';
+import { ObjectId } from 'mongodb';
 
 // passport.use(
 //   new GoogleStrategy(
@@ -40,11 +41,19 @@ function initialize(passport) {
 
   passport.use(new LocalStrategy({ usernameField: 'email' }, localVerify));
 
-  passport.serializeUser((user, done) => done(null, user._id));
+  passport.serializeUser((user, done) => {
+    console.log('-------------------');
+    console.log(user._id.toString());
+    console.log('-------------------');
+    done(null, user._id.toString());
+  });
   passport.deserializeUser(async (id, done) => {
     let user;
     await withDb(async (db) => {
-      user = await db.collection('users').findOne({ _id: id });
+      user = await db.collection('users').findOne({ _id: ObjectId(id) });
+      console.log('-------------------');
+      console.log(user);
+      console.log('-------------------');
     });
 
     return done(null, user);

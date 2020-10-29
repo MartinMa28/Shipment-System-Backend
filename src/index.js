@@ -24,7 +24,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(flash());
 app.use(
   session({
-    secret: 'keyboard cat',
+    secret: 'mySecret',
     resave: false,
     saveUninitialized: false,
   })
@@ -38,8 +38,7 @@ app.use('/shipment', shipmentRouter);
 app.use('/auth', authRouter);
 
 app.get('/', (req, res) => {
-  console.log(req.user);
-  res.render('index.ejs', { name: req.user.email });
+  res.render('index.ejs', { name: req.user.username });
 });
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT} ...`));
