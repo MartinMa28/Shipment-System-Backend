@@ -10,17 +10,23 @@ router.get('/register', checkNotAuthenticated, (req, res) => {
 });
 
 router.post('/register', async (req, res) => {
-  await withDb(async (db) => {
-    console.log(req.body);
-    const hashedPwd = await bcrypt.hash(req.body.password, 10);
-    console.log(hashedPwd);
-    await db.collection('users').insertOne({
-      username: req.body.username,
-      email: req.body.email,
-      password: hashedPwd,
+  try {
+    await withDb(async (db) => {
+      console.log(req.body);
+      const hashedPwd = await bcrypt.hash(req.body.password, 10);
+      console.log(hashedPwd);
+      await db.collection('users').insertOne({
+        username: req.body.username,
+        email: req.body.email,
+        password: hashedPwd,
+      });
     });
-  });
-  res.redirect('/auth/login');
+
+    res.status(200).json({ message: 'Registered a new user.' });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: `Internal Error: ${err}` });
+  }
 });
 
 export default router;
