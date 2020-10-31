@@ -4,12 +4,6 @@ import { checkNotAuthenticated } from '../passport';
 
 const router = express.Router();
 
-// router.get('/google', passport.authenticate('google', { scope: ['profile'] }));
-
-// router.get('/google/callback', { failureRedirect: '/login' }, (req, res) => {
-//   res.redirect('/');
-// });
-
 router.get('/login', checkNotAuthenticated, (req, res) => {
   res.render('login.ejs');
 });
@@ -36,6 +30,16 @@ router.post('/login', (req, res, next) => {
       });
     });
   })(req, res, next);
+});
+
+router.get('/logout', (req, res) => {
+  try {
+    req.logOut();
+    res.status(200).json({ message: 'Log out successfully.' });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: `Internal error: ${err}` });
+  }
 });
 
 export default router;
