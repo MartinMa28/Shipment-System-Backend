@@ -5,4 +5,5 @@ WORKDIR /code/
 COPY . /code/
 
 RUN cd /code
+RUN rm -rf /code/node_modules
 RUN npm install
