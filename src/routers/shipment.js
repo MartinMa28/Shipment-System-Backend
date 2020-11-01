@@ -4,9 +4,9 @@ const router = express.Router();
 const connectDB = require('../database/db').default;
 
 // get all shipments with this userID
-router.get('/:id', async (req, res) => {
+router.get('/', async (req, res) => {
   const myDB = await connectDB();
-  const userID = parseInt(req.params.id);
+  const userID = req.session.user._id;
   const data = await myDB.getShipments(userID);
   res.json(data);
 });
@@ -16,7 +16,7 @@ router.get('/:id', async (req, res) => {
 router.post('/new', async (req, res) => {
   const myDB = await connectDB();
   const newShipment = {
-    user_id: req.body.user_id,
+    user_id: req.session.user._id,
     tracking_num: req.body.tracking_num.toString(),
     carrier: req.body.carrier,
     comment: req.body.comment,

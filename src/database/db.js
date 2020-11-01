@@ -11,7 +11,7 @@ const connectDB = async () => {
     const db = client.db('tracking_database');
     const col = db.collection('shipments');
 
-    const query = { user_id: userID};
+    const query = { user_id: userID };
     return col
       .find(query)
       .sort({ _id: -1 })

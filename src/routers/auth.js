@@ -24,9 +24,11 @@ router.post('/login', (req, res, next) => {
       if (err) {
         return next(err);
       }
-
+      req.session.user = user;
       return res.status(200).json({
         message: 'Authorized',
+        username: user.username,
+        userId: user._id
       });
     });
   })(req, res, next);
@@ -35,6 +37,7 @@ router.post('/login', (req, res, next) => {
 router.get('/logout', (req, res) => {
   try {
     req.logOut();
+    req.session.user = null;
     res.status(200).json({ message: 'Log out successfully.' });
   } catch (err) {
     console.log(err);
