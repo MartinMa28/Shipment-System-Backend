@@ -24,16 +24,16 @@ services:
     deploy:
       resources:
         limits:
-          memory: 500M
+          memory: 400M
   rabbit:
     image: rabbitmq:3.8.9
     restart: always
     environment:
-      - RABBITMQ_VM_MEMORY_HIGH_WATERMARK=0.8
+      - RABBITMQ_VM_MEMORY_HIGH_WATERMARK=0.95
     deploy:
       resources:
         limits:
-          memory: 800M
+          memory: 500M
   airflow:
     image: puckel/docker-airflow:latest
     command: webserver
@@ -47,4 +47,4 @@ services:
     deploy:
       resources:
         limits:
-          memory: 800M
+          memory: 500M
