@@ -1,12 +1,7 @@
 import express from 'express';
 import passport from 'passport';
-import { checkNotAuthenticated } from '../passport';
 
 const router = express.Router();
-
-router.get('/login', checkNotAuthenticated, (req, res) => {
-  res.render('login.ejs');
-});
 
 router.post('/login', (req, res, next) => {
   passport.authenticate('local', (err, user) => {

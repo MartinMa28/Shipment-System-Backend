@@ -1,21 +1,7 @@
-// import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 import { Strategy as LocalStrategy } from 'passport-local';
 import withDb from './database/dbUtils';
 import bcrypt from 'bcrypt';
 import { ObjectId } from 'mongodb';
-
-// passport.use(
-//   new GoogleStrategy(
-//     {
-//       clientID: process.env.GOOGLE_CLIENT_ID,
-//       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-//       callbackURL: 'http://localhost:8000/auth/google/callback',
-//     },
-//     (accessToken, refreshToken, profile, done) => {
-//       return done();
-//     }
-//   )
-// );
 
 function initialize(passport) {
   const localVerify = async (email, password, done) => {
@@ -54,22 +40,4 @@ function initialize(passport) {
   });
 }
 
-// passport middlewares
-const checkAuthenticated = (req, res, next) => {
-  if (req.isAuthenticated()) {
-    return next();
-  }
-
-  res.redirect('/auth/login');
-};
-
-const checkNotAuthenticated = (req, res, next) => {
-  if (!req.isAuthenticated()) {
-    return next();
-  }
-
-  res.redirect('/');
-};
-
 export default initialize;
-export { checkAuthenticated, checkNotAuthenticated };

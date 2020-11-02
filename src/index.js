@@ -8,16 +8,14 @@ import userRouter from './routers/user';
 import shipmentRouter from './routers/shipment';
 import stateSyncRouter from './routers/state-sync-job';
 import authRouter from './routers/auth';
-import initializePassport, { checkAuthenticated } from './passport';
+import initializePassport from './passport';
 import cors from 'cors';
+import path from 'path';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 7000;
-
-// ejs template only for testing
-app.set('view-engine', 'ejs');
 
 initializePassport(passport);
 app.use(bodyParser.json());
@@ -34,28 +32,20 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(function (req, res, next) {
-  if (
-    !req.user &&
-    req.path != '/auth/login' &&
-    req.path != '/user/register' &&
-    req.path != '/state-sync'
-  ) {
+  if (!req.isAuthenticated() && req.path === '/shipment-list') {
     console.log('Not logged in!');
-    res.json({ loggedIn: false });
+    res.redirect('/');
   } else {
     next();
   }
 });
 
+app.use(express.static(path.join(__dirname, '../build')));
 app.use('/user', userRouter);
 app.use('/state-sync', stateSyncRouter);
 app.use('/shipment', shipmentRouter);
 app.use('/auth', authRouter);
 app.use(cors());
-
-app.get('/', checkAuthenticated, (req, res) => {
-  res.render('index.ejs', { name: req.user.username });
-});
 
 app.get('/session-test', (req, res) => {
   if (req.user) {
@@ -69,6 +59,10 @@ app.get('/session-test', (req, res) => {
       user_id: 'session is not working',
     });
   }
+});
+
+app.get('/*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../build', 'index.html'));
 });
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT} ...`));
