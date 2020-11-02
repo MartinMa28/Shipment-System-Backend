@@ -1,13 +1,8 @@
 import express from 'express';
 import withDb from '../database/dbUtils';
 import bcrypt from 'bcrypt';
-import { checkNotAuthenticated } from '../passport';
 
 const router = express.Router();
-
-router.get('/register', checkNotAuthenticated, (req, res) => {
-  res.render('register.ejs');
-});
 
 router.post('/register', async (req, res) => {
   try {
