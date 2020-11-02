@@ -73,19 +73,19 @@ Right now, we have every thing the back-end needs. If you want to print the log 
 Force build:
 
 ```
-docker-compose up --build
+docker-compose --compatibility up --build
 ```
 
 Don't rebuild:
 
 ```
-docker-compose up
+docker-compose --compatibility up
 ```
 
 If you don't want to have the logs in terminal, then run the container in detached mode.
 
 ```
-docker-compose up -d
+docker-compose --compatibility up -d
 ```
 
 ### Run the consumer worker
@@ -99,8 +99,6 @@ pwd (should be /code)
 npx babel-node src/worker.js
 ```
 
-### Copy dag to airflow container
+### Run Airflow DAG
 
-```
-docker cp src/dags/state-sync-dag.py shipment-system-backend_airflow_1:/usr/local/airflow
-```
+Go to http://foo.hostname:8080, and turn on shipment_dag.
