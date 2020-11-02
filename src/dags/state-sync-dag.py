@@ -6,7 +6,7 @@ from airflow.operators.bash_operator import BashOperator
 
 default_args = {
   'owner': 'Yilin',
-  'start_date': days_ago(0),
+  'start_date': days_ago(2),
   'depends_on_past': False,
   'retries': 1,
   'retry_delay': timedelta(minutes=1)
@@ -16,7 +16,7 @@ dag = DAG(
   'shipment_dag',
   default_args=default_args,
   description='DAG for the shipment system',
-  schedule_interval=timedelta(minutes=1)
+  schedule_interval=timedelta(minutes=5)
 )
 
 t1 = BashOperator(

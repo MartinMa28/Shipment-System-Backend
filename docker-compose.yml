@@ -5,6 +5,11 @@ services:
     image: mongo:4.4.1
     ports:
       - '27018:27017'
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 500M
   web:
     build: .
     command: npm start
@@ -15,10 +20,31 @@ services:
       - rabbit
     volumes:
       - './src:/code/src'
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 400M
   rabbit:
     image: rabbitmq:3.8.9
+    restart: always
+    environment:
+      - RABBITMQ_VM_MEMORY_HIGH_WATERMARK=0.95
+    deploy:
+      resources:
+        limits:
+          memory: 500M
   airflow:
     image: puckel/docker-airflow:latest
     command: webserver
+    environment:
+      - AIRFLOW__WEBSERVER__WORKERS=1
+    restart: always
     ports:
       - '8080:8080'
+    volumes:
+      - './src/dags:/usr/local/airflow/dags'
+    deploy:
+      resources:
+        limits:
+          memory: 500M
