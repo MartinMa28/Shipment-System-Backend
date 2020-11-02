@@ -24,11 +24,10 @@ router.post('/login', (req, res, next) => {
       if (err) {
         return next(err);
       }
-
       return res.status(200).json({
         message: 'Authorized',
-        username: req.user.username,
-        userId: req.user._id.toString(),
+        username: user.username,
+        userId: user._id.toString(),
       });
     });
   })(req, res, next);

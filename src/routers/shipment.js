@@ -4,24 +4,26 @@ const router = express.Router();
 const connectDB = require('../database/db').default;
 
 // get all shipments with this userID
-router.get('/:id', async (req, res, next) => {
+router.get('/', async (req, res) => {
   const myDB = await connectDB();
-  const userID = parseInt(req.params.id);
+  const userID = req.user._id.toString();
   const data = await myDB.getShipments(userID);
   res.json(data);
 });
 
 // create a new shipment
 // available carrier: usps, fedex, ups
-router.post('/new', async (req, res, next) => {
+router.post('/new', async (req, res) => {
   const myDB = await connectDB();
   const newShipment = {
-    user_id: req.body.user_id,
-    tracking_num: req.body.tracking_num,
+    user_id: req.user._id.toString(),
+    tracking_num: req.body.tracking_num.toString(),
     carrier: req.body.carrier,
     comment: req.body.comment,
     order_url: req.body.order_url,
     active: true,
+    status: 'NY',
+    carrier_status_desc: 'Waiting to be updated...',
   };
   const data = await myDB.addShipment(newShipment);
   if (data.result.ok === 1) {
