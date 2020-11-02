@@ -6,7 +6,7 @@ const connectDB = require('../database/db').default;
 // get all shipments with this userID
 router.get('/', async (req, res) => {
   const myDB = await connectDB();
-  const userID = req.session.user._id;
+  const userID = req.user._id.toString();
   const data = await myDB.getShipments(userID);
   res.json(data);
 });
@@ -16,14 +16,14 @@ router.get('/', async (req, res) => {
 router.post('/new', async (req, res) => {
   const myDB = await connectDB();
   const newShipment = {
-    user_id: req.session.user._id,
+    user_id: req.user._id.toString(),
     tracking_num: req.body.tracking_num.toString(),
     carrier: req.body.carrier,
     comment: req.body.comment,
     order_url: req.body.order_url,
     active: true,
-    status: "NY",
-    carrier_status_desc:"Waiting to be updated..."
+    status: 'NY',
+    carrier_status_desc: 'Waiting to be updated...',
   };
   const data = await myDB.addShipment(newShipment);
   if (data.result.ok === 1) {

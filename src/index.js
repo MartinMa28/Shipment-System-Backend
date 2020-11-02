@@ -34,13 +34,18 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use(function (req, res, next) {
-  if (!req.session.user && req.path != '/auth/login' && req.path != '/user/register') {
-    console.log("Not logged in!");
-    res.json({loggedIn: false});
+  if (
+    !req.user &&
+    req.path != '/auth/login' &&
+    req.path != '/user/register' &&
+    req.path != '/state-sync'
+  ) {
+    console.log('Not logged in!');
+    res.json({ loggedIn: false });
   } else {
     next();
   }
-})
+});
 
 app.use('/user', userRouter);
 app.use('/state-sync', stateSyncRouter);
