@@ -20,5 +20,7 @@ services:
   airflow:
     image: puckel/docker-airflow:latest
     command: webserver
+    environment:
+      - AIRFLOW__WEBSERVER__WORKERS=1
     ports:
       - '8080:8080'
