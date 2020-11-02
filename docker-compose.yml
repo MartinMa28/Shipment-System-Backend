@@ -24,3 +24,5 @@ services:
       - AIRFLOW__WEBSERVER__WORKERS=1
     ports:
       - '8080:8080'
+    volumes:
+      - './src/dags:/usr/local/airflow/dags'
