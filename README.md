@@ -50,6 +50,18 @@ cp -rf ./build/ ~/Shipment-System-Backend/
 
 ### Add environment variables
 
+```
+touch .env
+```
+
+Add the following environment variables to .env file. Remember to replace the dummy values.
+
+```
+PORT=8000
+SHIPENGINE_API_KEY=dummy_shipengine_api_key_123456
+SESSION_SECRET=dummy_secret
+```
+
 ### Build & run the back-end in containers
 
 ```
