@@ -27,7 +27,7 @@ router.post('/login', (req, res, next) => {
       return res.status(200).json({
         message: 'Authorized',
         username: user.username,
-        userId: user._id,
+        userId: user._id.toString(),
       });
     });
   })(req, res, next);
