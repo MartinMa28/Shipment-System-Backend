@@ -6,6 +6,10 @@ services:
     ports:
       - '27018:27017'
     restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 500M
   web:
     build: .
     command: npm start
@@ -17,11 +21,19 @@ services:
     volumes:
       - './src:/code/src'
     restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 500M
   rabbit:
     image: rabbitmq:3.8.9
     restart: always
     environment:
-      - RABBITMQ_VM_MEMORY_HIGH_WATERMARK=0.2
+      - RABBITMQ_VM_MEMORY_HIGH_WATERMARK=0.8
+    deploy:
+      resources:
+        limits:
+          memory: 800M
   airflow:
     image: puckel/docker-airflow:latest
     command: webserver
@@ -32,3 +44,7 @@ services:
       - '8080:8080'
     volumes:
       - './src/dags:/usr/local/airflow/dags'
+    deploy:
+      resources:
+        limits:
+          memory: 800M
