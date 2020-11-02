@@ -31,6 +31,10 @@ const processShipment = async (shipmentId, carrier, trackingNum) => {
     ) {
       console.log(`No change on shipment ${shipmentId}`);
     } else {
+      let latestEvent = null;
+      if (respData.events.length > 0) {
+        latestEvent = respData.events[respData.events.length - 1];
+      }
       db.collection('shipments').updateOne(
         {
           _id: ObjectId(shipmentId),
@@ -39,6 +43,7 @@ const processShipment = async (shipmentId, carrier, trackingNum) => {
           $set: {
             status: respData.status_code,
             carrier_status_desc: respData.carrier_status_description,
+            event: latestEvent,
           },
         }
       );
