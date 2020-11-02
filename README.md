@@ -45,7 +45,7 @@ npm run build
 ### Copy the production build folder to the back-end folder
 
 ```
-cp -rf ./build/ ~/Shipment-System-Backend/
+cp -r ./build/ ~/Shipment-System-Backend/
 ```
 
 ### Add environment variables
@@ -91,4 +91,10 @@ docker-compose up -d
 ### Run the consumer worker
 
 Get into web container, and run the worker.
-Note that, in order t
+Note that, in order to load the environment variables, the command must be executed at /code (where .env is at) in the container.
+
+```
+docker exec -it shipment-system-backend_web_1 bash
+pwd (should be /code)
+npx babel-node src/worker.js
+```
