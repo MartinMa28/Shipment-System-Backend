@@ -98,3 +98,9 @@ docker exec -it shipment-system-backend_web_1 bash
 pwd (should be /code)
 npx babel-node src/worker.js
 ```
+
+### Copy dag to airflow container
+
+```
+docker cp src/dags/state-sync-dag.py shipment-system-backend_airflow_1:/usr/local/airflow
+```
