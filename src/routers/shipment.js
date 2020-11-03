@@ -24,6 +24,7 @@ router.post('/new', async (req, res) => {
     active: true,
     status: 'NY',
     carrier_status_desc: 'Waiting to be updated...',
+    events: [],
   };
   const data = await myDB.addShipment(newShipment);
   if (data.result.ok === 1) {
