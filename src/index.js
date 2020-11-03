@@ -34,7 +34,7 @@ app.use(passport.session());
 app.use(function (req, res, next) {
   if (!req.isAuthenticated() && req.path === '/shipment-list') {
     console.log('Not logged in!');
-    res.redirect('/');
+    res.redirect('/login');
   } else {
     next();
   }
