@@ -31,15 +31,6 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(function (req, res, next) {
-  if (!req.isAuthenticated() && req.path === '/shipment-list') {
-    console.log('Not logged in!');
-    res.redirect('/login');
-  } else {
-    next();
-  }
-});
-
 app.use(express.static(path.join(__dirname, '../build')));
 app.use('/user', userRouter);
 app.use('/state-sync', stateSyncRouter);
