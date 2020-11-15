@@ -3,6 +3,16 @@ import express from 'express';
 const router = express.Router();
 const connectDB = require('../database/db').default;
 
+function checkAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next();
+  }
+
+  res.redirect('/login');
+}
+
+router.use(checkAuthenticated);
+
 // get all shipments with this userID
 router.get('/', async (req, res) => {
   const myDB = await connectDB();
